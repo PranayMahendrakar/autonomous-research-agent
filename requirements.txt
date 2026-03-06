@@ -1,0 +1,26 @@
+# 🤖 Autonomous Research Agent - Dependencies
+
+# ── LLM & AI ──────────────────────────────────────────────
+openai>=1.40.0                  # OpenAI API client (also used for Ollama)
+python-dotenv>=1.0.0            # Environment variable management
+
+# ── Vector Database ────────────────────────────────────────
+chromadb>=0.5.0                 # Vector DB for RAG
+sentence-transformers>=3.0.0    # Local embeddings (all-MiniLM-L6-v2)
+
+# ── Web Scraping ──────────────────────────────────────────
+requests>=2.31.0                # HTTP requests
+beautifulsoup4>=4.12.0          # HTML parsing
+duckduckgo-search>=6.0.0        # DuckDuckGo search (no API key needed)
+lxml>=5.2.0                     # Fast HTML/XML parser
+
+# ── Web UI ────────────────────────────────────────────────
+streamlit>=1.38.0               # Web application framework
+
+# ── Utilities ─────────────────────────────────────────────
+rich>=13.7.0                    # Beautiful terminal output
+tqdm>=4.66.0                    # Progress bars
+
+# ── Optional: Enhanced parsing ────────────────────────────
+# newspaper3k>=0.2.8            # Better article extraction
+# trafilatura>=1.12.0           # Alternative web scraper
