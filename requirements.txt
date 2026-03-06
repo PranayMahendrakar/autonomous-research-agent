@@ -12,6 +12,7 @@ sentence-transformers>=3.0.0    # Local embeddings (all-MiniLM-L6-v2)
 requests>=2.31.0                # HTTP requests
 beautifulsoup4>=4.12.0          # HTML parsing
 duckduckgo-search>=6.0.0        # DuckDuckGo search (no API key needed)
+tavily-python>=0.5.0            # Tavily search (optional, set SEARCH_PROVIDER=tavily)
 lxml>=5.2.0                     # Fast HTML/XML parser
 
 # ── Web UI ────────────────────────────────────────────────
