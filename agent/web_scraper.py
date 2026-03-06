@@ -3,6 +3,7 @@
 Handles internet search and article content extraction.
 """
 
+import os
 import re
 import time
 import requests
@@ -15,7 +16,7 @@ from duckduckgo_search import DDGS
 class WebScraper:
     """
     Web scraper that:
-    - Searches the internet using DuckDuckGo
+    - Searches the internet using DuckDuckGo or Tavily
     - Extracts clean article content from URLs
     - Handles rate limiting and errors gracefully
     """
@@ -31,10 +32,17 @@ class WebScraper:
         })
         self.timeout = 15
         self.max_content_length = 10000  # chars per article
+        self.search_provider = os.getenv("SEARCH_PROVIDER", "duckduckgo").lower()
+
+        if self.search_provider == "tavily":
+            from tavily import TavilyClient
+            self.tavily_client = TavilyClient()
 
     def search(self, query: str, num_results: int = 8) -> List[str]:
         """
-        Search the internet using DuckDuckGo and return URLs.
+        Search the internet and return URLs.
+
+        Uses DuckDuckGo by default, or Tavily if SEARCH_PROVIDER=tavily.
 
         Args:
             query: Search query string
@@ -43,6 +51,12 @@ class WebScraper:
         Returns:
             List of URLs
         """
+        if self.search_provider == "tavily":
+            return self._search_tavily(query, num_results)
+        return self._search_duckduckgo(query, num_results)
+
+    def _search_duckduckgo(self, query: str, num_results: int) -> List[str]:
+        """Search using DuckDuckGo and return URLs."""
         urls = []
         try:
             with DDGS() as ddgs:
@@ -67,6 +81,24 @@ class WebScraper:
                 urls = [r.get("url", "") for r in results if r.get("url")]
             except Exception as e2:
                 print(f"   Fallback search error: {e2}")
+
+        return urls[:num_results]
+
+    def _search_tavily(self, query: str, num_results: int) -> List[str]:
+        """Search using Tavily and return URLs."""
+        urls = []
+        try:
+            response = self.tavily_client.search(
+                query=query,
+                max_results=num_results,
+                search_depth="basic",
+            )
+            for r in response.get("results", []):
+                url = r.get("url", "")
+                if url and self._is_valid_url(url):
+                    urls.append(url)
+        except Exception as e:
+            print(f"   Tavily search error: {e}")
 
         return urls[:num_results]
 
